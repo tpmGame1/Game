@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape the Room!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #screen {
+            margin-bottom: 20px;
+        }
+
+        .doors-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .door {
+            width: 80px;
+            height: 120px;
+            background-color: #8B4513;
+            border: 2px solid #543011;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .door:hover {
+            transform: scale(1.1);
+        }
+
+        #ad-container {
+            margin-top: 20px;
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="screen">
+        <h1>Escape the Room!</h1>
+        <p id="message">Choose a door to escape. Only one leads to freedom!</p>
+        <button id="start-button">Start Game</button>
+    </div>
+
+    <div id="game-screen" style="display: none;">
+        <div class="doors-container">
+            <div class="door" data-door="1">1</div>
+            <div class="door" data-door="2">2</div>
+            <div class="door" data-door="3">3</div>
+            <div class="door" data-door="4">4</div>
+        </div>
+        <p id="game-message"></p>
+    </div>
+
+    <div id="ad-container">
+        <h3>Ad</h3>
+        <p>Continue playing after this short ad!</p>
+        <!-- Escape room ad -->
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7580106476259032"
+            crossorigin="anonymous"></script>
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-pub-7580106476259032"
+            data-ad-slot="2184975906"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <div id="end-screen" style="display: none;">
+        <h2>You Escaped!</h2>
+        <p>Congratulations!</p>
+        <button id="restart-button">Play Again</button>
+    </div>
+</div>
+
+<script>
+    const startButton = document.getElementById('start-button');
+    const gameScreen = document.getElementById('game-screen');
+    const screen = document.getElementById('screen');
+    const adContainer = document.getElementById('ad-container');
+    const endScreen = document.getElementById('end-screen');
+    const doors = document.querySelectorAll('.door');
+    const gameMessage = document.getElementById('game-message');
+    const restartButton = document.getElementById('restart-button');
+
+    let exitDoor;
+
+    function startGame() {
+        exitDoor = Math.floor(Math.random() * 4) + 1;
+        screen.style.display = 'none';
+        gameScreen.style.display = 'block';
+        adContainer.style.display = 'none';
+        endScreen.style.display = 'none';
+        gameMessage.textContent = "";
+    }
+
+    function showAd() {
+        gameScreen.style.display = 'none';
+        adContainer.style.display = 'block';
+        endScreen.style.display = 'none';
+    }
+
+    function endGame() {
+        gameScreen.style.display = 'none';
+        adContainer.style.display = 'none';
+        endScreen.style.display = 'block';
+    }
+
+    startButton.addEventListener('click', startGame);
+
+    doors.forEach(door => {
+        door.addEventListener('click', () => {
+            const selectedDoor = parseInt(door.dataset.door);
+            if (selectedDoor === exitDoor) {
+                gameMessage.textContent = "You found the exit!";
+                setTimeout(endGame, 1500);
+            } else {
+                gameMessage.textContent = "Wrong door!  Watching ad...";
+                setTimeout(showAd, 1500);
+            }
+        });
+    });
+
+    restartButton.addEventListener('click', startGame);
+</script>
+
+</body>
+</html>
